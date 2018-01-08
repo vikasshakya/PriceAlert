@@ -202,34 +202,38 @@ if __name__ == "__main__":
     
     while True:
         try:
-            exchange = {"EthexIndia":["https://api.ethexindia.com/ticker/","ETH","INR"],
+            exchange = {"BitFinex":["https://api.bitfinex.com/v1/pubticker/btcusd","BTC","$"],
                         #"BtcxIndia":["https://api.btcxindia.com/ticker/","XRP","INR"],
-                        "BitFinex":["https://api.bitfinex.com/v1/pubticker/btcusd","BTC","$"]
+                        "EthexIndia":["https://api.ethexindia.com/ticker/","ETH","INR"]                                                
                         }
+            
+            
+            msg = CMC()
+            for m in msg:
+                print "CMC Price Alert:\n" + m
+                balloon_tip("CMC Price Alert", m)
+                time.sleep(random.randint(2,5))
+                
             
             msg = koinex()
             print "Koinex Price Alert:\n" + msg
             balloon_tip("Koinex Price Alert", msg)    
-            time.sleep(random.randint(1,5))
+            time.sleep(random.randint(2,5))
+            
 
             msg = bittrex()            
             for m in msg:
                 print "Bittrex Price Alert:\n" + m
                 balloon_tip("Bittrex Price Alert", m)    
-                time.sleep(random.randint(1,5))
+                time.sleep(random.randint(2,5))
+                
 
             for ex in exchange:        
                 msg = Exchange(exchange[ex][0],exchange[ex][1],exchange[ex][2])
                 print ex +" Price Alert:\n" + msg
                 balloon_tip(ex +" Price Alert", msg)    
-                time.sleep(random.randint(1,5))
-            
-               
-            msg = CMC()
-            for m in msg:
-                print "CMC Price Alert:\n" + m
-                balloon_tip("CMC Price Alert", m)
-                time.sleep(random.randint(1,5))
+                time.sleep(random.randint(2,5))           
+                           
             
             time.sleep(random.randint(600,900))      # Notification Time-interval (in seconds)
             
