@@ -129,8 +129,8 @@ def CMC():
     dic2 = {}
     try:
         req1 = requests.get('https://api.coinmarketcap.com/v1/global/') 
-        req1 = req1.json()             
-        req2 = requests.get('https://api.coinmarketcap.com/v1/ticker/?limit=1500')
+        req1 = req1.json()        
+        req2 = requests.get('https://api.coinmarketcap.com/v1/ticker/?limit=1500', stream=True, timeout=None )
         req2 = req2.json()        
         for r in req1:
             if r == "total_market_cap_usd":
@@ -167,9 +167,11 @@ def CMC():
             msg5 = msg5 + sorted_asc2[i][0] + "\t" + str("{0:.1f}".format(sorted_asc2[i][1])) + "%\n"
             
          
-        msg = [msg1,msg2,msg3,msg4,msg5]  
+        msg = [msg1,msg2,msg3,msg4,msg5]
+        
+    
     except Exception,e:
-          print e    
+          print e
     return msg
 
 
@@ -208,17 +210,18 @@ if __name__ == "__main__":
                         }
             
             
-            msg = CMC()
-            for m in msg:
-                print "CMC Price Alert:\n" + m
-                balloon_tip("CMC Price Alert", m)
-                time.sleep(random.randint(2,5))
-                
-            
+                       
             msg = koinex()
             print "Koinex Price Alert:\n" + msg
             balloon_tip("Koinex Price Alert", msg)    
             time.sleep(random.randint(2,5))
+
+
+            for ex in exchange:        
+                msg = Exchange(exchange[ex][0],exchange[ex][1],exchange[ex][2])
+                print ex +" Price Alert:\n" + msg
+                balloon_tip(ex +" Price Alert", msg)    
+                time.sleep(random.randint(2,5))
             
 
             msg = bittrex()            
@@ -226,17 +229,17 @@ if __name__ == "__main__":
                 print "Bittrex Price Alert:\n" + m
                 balloon_tip("Bittrex Price Alert", m)    
                 time.sleep(random.randint(2,5))
-                
+                            
 
-            for ex in exchange:        
-                msg = Exchange(exchange[ex][0],exchange[ex][1],exchange[ex][2])
-                print ex +" Price Alert:\n" + msg
-                balloon_tip(ex +" Price Alert", msg)    
-                time.sleep(random.randint(2,5))           
+
+            msg = CMC()
+            for m in msg:
+                print "CMC Price Alert:\n" + m
+                balloon_tip("CMC Price Alert", m)
+                time.sleep(random.randint(2,5))                
                            
             
-            time.sleep(random.randint(600,900))      # Notification Time-interval (in seconds)
-            
+            time.sleep(random.randint(600,900))      # Notification Time-interval (in seconds)            
 
         except (KeyboardInterrupt, SystemExit):
             raise
